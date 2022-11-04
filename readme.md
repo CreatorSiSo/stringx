@@ -1,3 +1,3 @@
 # String Extensions - stringx
 
-Traits for often used functionality to generate or modify strings.
+Traits for often used functionality when generating or modifying strings.
