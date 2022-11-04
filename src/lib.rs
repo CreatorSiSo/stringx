@@ -3,19 +3,34 @@ use std::fmt::Display;
 pub trait Join {
   type Item;
 
+  /// Returns a string that contains the items separated by the separator string.
+  /// ```rust
+  /// use stringx::Join;
+  ///
+  /// assert_eq!((1..=5).join(", "), "1, 2, 3, 4, 5")
+  /// ```
   fn join(&mut self, sep: &str) -> String
   where
     Self::Item: Display;
 
+  /// Works like [`Join::join`] but takes an additional formatting closure as argument.
+  /// ```rust
+  /// use stringx::Join;
+  ///
+  /// let string = [Some(8379), Some(990), None, Some(974385)]
+  /// 	.iter()
+  /// 	.join_format(" | ", |item| match item {
+  /// 		Some(number) => number.to_string(),
+  /// 		None => "_".into(),
+  /// 	});
+  /// assert_eq!(string, "8379 | 990 | _ | 974385");
+  /// ```
   fn join_format<F>(&mut self, sep: &str, f: F) -> String
   where
     F: Fn(&Self::Item) -> String;
 }
 
-impl<I> Join for I
-where
-  I: Iterator,
-{
+impl<I: Iterator> Join for I {
   type Item = I::Item;
 
   fn join(&mut self, sep: &str) -> String
